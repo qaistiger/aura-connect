@@ -54,7 +54,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 function useAudit() {
   const { user } = useAuth();
-  return async (action: string, targetType: string, targetId: string, details: Record<string, unknown> = {}) => {
+  return async (action: string, targetType: string, targetId: string, details: Record<string, string> = {}) => {
     if (!user) return;
     await supabase.from("admin_audit_logs").insert({
       admin_id: user.id,
