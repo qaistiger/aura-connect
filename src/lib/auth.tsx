@@ -58,6 +58,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const userId = session?.user.id ?? null;
 
+  useEffect(() => {
+    if (!userId) return;
+    void supabase.from("profiles").update({ last_active_at: new Date().toISOString() }).eq("id", userId);
+  }, [userId]);
+
+
   const { data: profile = null } = useQuery({
     queryKey: ["me", "profile", userId],
     enabled: !!userId,
