@@ -69,7 +69,10 @@ export function BrandingPanel() {
   const onLogoPick = async (file: File | undefined) => {
     if (!file) return;
     const problem = validateImage(file);
-    if (problem) return toast.error(problem);
+    if (problem) {
+      toast.error(problem);
+      return;
+    }
     setBusy(true);
     try {
       const path = await uploadBranding("logo", file);

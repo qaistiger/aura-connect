@@ -39,6 +39,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { BrandingPanel } from "@/components/admin/BrandingPanel";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -107,6 +108,7 @@ function AdminPage() {
           <TabsTrigger value="content">Content</TabsTrigger>
           <TabsTrigger value="reports">Reports</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
+          <TabsTrigger value="branding">Branding</TabsTrigger>
           <TabsTrigger value="system">System</TabsTrigger>
         </TabsList>
 
@@ -125,6 +127,10 @@ function AdminPage() {
         <TabsContent value="security" className="mt-5">
           <SecurityPanel />
         </TabsContent>
+        <TabsContent value="branding" className="mt-5">
+          <BrandingPanel />
+        </TabsContent>
+
         <TabsContent value="system" className="mt-5">
           <SystemPanel isSuperAdmin={isSuperAdmin} />
         </TabsContent>
