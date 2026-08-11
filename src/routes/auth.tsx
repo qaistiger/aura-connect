@@ -6,6 +6,8 @@ import { Apple, Chrome, Lock, ShieldCheck, Sparkles } from "lucide-react";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/lib/auth";
 import { BrandLockup } from "@/components/Brand";
+import { LoginShowcase } from "@/components/LoginShowcase";
+import { useBranding } from "@/lib/branding";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/auth")({
@@ -25,6 +27,7 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const { user, loading } = useAuth();
+  const branding = useBranding();
   const navigate = useNavigate();
   const [pending, setPending] = useState<"google" | "apple" | null>(null);
 
@@ -52,12 +55,17 @@ function AuthPage() {
   };
 
   return (
-    <div className="mx-auto flex max-w-md flex-col items-center py-10">
+    <div className="mx-auto grid max-w-5xl items-start gap-8 py-10 lg:grid-cols-[1.1fr_minmax(360px,420px)]">
+      <div className="order-2 space-y-4 lg:order-1">
+        <LoginShowcase />
+      </div>
+
+      <div className="order-1 flex flex-col items-center lg:order-2">
       <BrandLockup className="mb-8" />
       <div className="glass-panel w-full rounded-2xl p-8">
         <h1 className="font-display text-2xl font-extrabold">Sign in</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Use a trusted provider. We never see or store your password.
+          Continue to {branding.site_name} with a trusted provider — no passwords shared.
         </p>
 
         <div className="mt-6 space-y-3">
@@ -95,6 +103,7 @@ function AuthPage() {
             claim it.
           </li>
         </ul>
+      </div>
       </div>
     </div>
   );

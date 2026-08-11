@@ -44,6 +44,24 @@ export type Database = {
         }
         Relationships: []
       }
+      blocks: {
+        Row: {
+          blocked_id: string
+          blocker_id: string
+          created_at: string
+        }
+        Insert: {
+          blocked_id: string
+          blocker_id: string
+          created_at?: string
+        }
+        Update: {
+          blocked_id?: string
+          blocker_id?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
       comments: {
         Row: {
           body: string
@@ -82,6 +100,51 @@ export type Database = {
             columns: ["post_id"]
             isOneToOne: false
             referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conversations: {
+        Row: {
+          created_at: string
+          id: string
+          last_message_at: string
+          requested_by: string
+          status: Database["public"]["Enums"]["conversation_status"]
+          user_a: string
+          user_b: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          requested_by: string
+          status?: Database["public"]["Enums"]["conversation_status"]
+          user_a: string
+          user_b: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          requested_by?: string
+          status?: Database["public"]["Enums"]["conversation_status"]
+          user_a?: string
+          user_b?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_user_a_profile_fkey"
+            columns: ["user_a"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_user_b_profile_fkey"
+            columns: ["user_b"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -175,6 +238,71 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      login_photos: {
+        Row: {
+          caption: string
+          created_at: string
+          created_by: string | null
+          id: string
+          image_url: string
+          is_active: boolean
+          sort_order: number
+        }
+        Insert: {
+          caption?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url: string
+          is_active?: boolean
+          sort_order?: number
+        }
+        Update: {
+          caption?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url?: string
+          is_active?: boolean
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          body: string
+          conversation_id: string
+          created_at: string
+          id: string
+          read_at: string | null
+          sender_id: string
+        }
+        Insert: {
+          body: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sender_id: string
+        }
+        Update: {
+          body?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
             referencedColumns: ["id"]
           },
         ]
@@ -308,6 +436,7 @@ export type Database = {
           id: string
           is_suspended: boolean
           last_active_at: string
+          setup_complete: boolean
           suspension_reason: string | null
           updated_at: string
           username: string
@@ -321,6 +450,7 @@ export type Database = {
           id: string
           is_suspended?: boolean
           last_active_at?: string
+          setup_complete?: boolean
           suspension_reason?: string | null
           updated_at?: string
           username: string
@@ -334,6 +464,7 @@ export type Database = {
           id?: string
           is_suspended?: boolean
           last_active_at?: string
+          setup_complete?: boolean
           suspension_reason?: string | null
           updated_at?: string
           username?: string
@@ -413,6 +544,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      are_mutual_follows: { Args: { _a: string; _b: string }; Returns: boolean }
+      can_send_message: {
+        Args: { _conv: string; _uid: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -421,9 +557,15 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_blocked_between: { Args: { _a: string; _b: string }; Returns: boolean }
+      is_conversation_member: {
+        Args: { _conv: string; _uid: string }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "super_admin" | "moderator" | "user"
+      conversation_status: "pending" | "accepted" | "rejected"
       media_kind: "photo" | "video"
       report_status: "pending" | "reviewing" | "resolved" | "dismissed"
       report_target: "user" | "post" | "comment"
@@ -556,6 +698,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["super_admin", "moderator", "user"],
+      conversation_status: ["pending", "accepted", "rejected"],
       media_kind: ["photo", "video"],
       report_status: ["pending", "reviewing", "resolved", "dismissed"],
       report_target: ["user", "post", "comment"],

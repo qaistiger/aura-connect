@@ -39,11 +39,16 @@ export function buildMediaPath(userId: string, file: File) {
 
 const signedCache = new Map<string, { url: string; expires: number }>();
 
-export async function getSignedUrl(path: string, seconds = 3600) {
-  const cached = signedCache.get(path);
+export async function getSignedUrlFrom(bucket: string, path: string, seconds = 3600) {
+  const key = `${bucket}:${path}`;
+  const cached = signedCache.get(key);
   if (cached && cached.expires > Date.now() + 60_000) return cached.url;
-  const { data, error } = await supabase.storage.from(MEDIA_BUCKET).createSignedUrl(path, seconds);
+  const { data, error } = await supabase.storage.from(bucket).createSignedUrl(path, seconds);
   if (error || !data?.signedUrl) return null;
-  signedCache.set(path, { url: data.signedUrl, expires: Date.now() + seconds * 1000 });
+  signedCache.set(key, { url: data.signedUrl, expires: Date.now() + seconds * 1000 });
   return data.signedUrl;
+}
+
+export async function getSignedUrl(path: string, seconds = 3600) {
+  return getSignedUrlFrom(MEDIA_BUCKET, path, seconds);
 }

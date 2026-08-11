@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CalendarDays, Flag, Lock, Settings } from "lucide-react";
+import { CalendarDays, Flag, Lock, MessageSquare, Settings } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { POST_SELECT, type FeedPost } from "@/lib/types";
+import { getOrCreateConversation } from "@/lib/messaging";
 import { PostCard } from "@/components/PostCard";
 import { UserAvatar } from "@/components/UserAvatar";
 import { ReportDialog, type ReportTarget } from "@/components/ReportDialog";
@@ -101,6 +102,19 @@ function ProfilePage() {
     },
   });
 
+  const navigate = useNavigate();
+
+  const startChat = useMutation({
+    mutationFn: async () => {
+      if (!user) throw new Error("auth");
+      return getOrCreateConversation(user.id, profile!.id);
+    },
+    onSuccess: (conversation) => {
+      navigate({ to: "/messages", search: { c: conversation.id } });
+    },
+    onError: () => toast.error(user ? "Couldn't open chat." : "Sign in to send messages."),
+  });
+
   const toggleFollow = useMutation({
     mutationFn: async () => {
       if (!user || !profile) throw new Error("auth");
@@ -188,6 +202,13 @@ function ProfilePage() {
               <>
                 <Button onClick={() => toggleFollow.mutate()} variant={isFollowing ? "outline" : "default"}>
                   {isFollowing ? "Following" : "Follow"}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => startChat.mutate()}
+                  disabled={startChat.isPending}
+                >
+                  <MessageSquare className="size-4" /> Message
                 </Button>
                 <Button
                   variant="ghost"

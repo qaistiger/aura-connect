@@ -11,6 +11,7 @@ export type Profile = {
   avatar_url: string | null;
   cover_url: string | null;
   is_suspended: boolean;
+  setup_complete: boolean;
   created_at: string;
 };
 
@@ -70,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id,username,display_name,bio,avatar_url,cover_url,is_suspended,created_at")
+        .select("id,username,display_name,bio,avatar_url,cover_url,is_suspended,setup_complete,created_at")
         .eq("id", userId!)
         .maybeSingle();
       if (error) throw error;
