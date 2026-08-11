@@ -1,8 +1,9 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Bell, Compass, Home, LogOut, Plus, Settings, Shield, User } from "lucide-react";
+import { Bell, Compass, Home, LogOut, MessageSquare, Plus, Settings, Shield, User } from "lucide-react";
 
 import { useAuth } from "@/lib/auth";
+import { useBranding } from "@/lib/branding";
 import { BrandLockup, BrandMark } from "@/components/Brand";
 import { UploadDialog } from "@/components/UploadDialog";
 import { UserAvatar } from "@/components/UserAvatar";
@@ -20,6 +21,7 @@ import { cn } from "@/lib/utils";
 const NAV = [
   { to: "/", label: "Home", icon: Home },
   { to: "/explore", label: "Explore", icon: Compass },
+  { to: "/messages", label: "Chat", icon: MessageSquare },
   { to: "/notifications", label: "Alerts", icon: Bell },
 ] as const;
 
@@ -28,6 +30,18 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [uploadOpen, setUploadOpen] = useState(false);
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const branding = useBranding();
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.title = document.title.replace(/AURALIS/g, branding.site_name);
+  }, [branding.site_name, pathname]);
+
+  useEffect(() => {
+    if (user && profile && !profile.setup_complete && pathname !== "/setup") {
+      navigate({ to: "/setup", replace: true });
+    }
+  }, [user, profile, pathname, navigate]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -120,7 +134,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <main className="mx-auto max-w-6xl px-4 pt-6 pb-28 md:pb-12">{children}</main>
 
       <nav className="glass-panel fixed inset-x-0 bottom-0 z-40 border-x-0 border-b-0 md:hidden">
-        <div className="grid grid-cols-4">
+        <div className="grid grid-cols-5">
           {NAV.map((item) => (
             <Link
               key={item.to}
