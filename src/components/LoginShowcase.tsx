@@ -72,7 +72,25 @@ export function LoginShowcase({ className }: { className?: string }) {
     return () => clearInterval(t);
   }, [slides.length]);
 
-  if (slides.length === 0) return null;
+  if (slides.length === 0) {
+    return (
+      <div
+        className={cn(
+          "glass-panel hidden aspect-[4/3] w-full flex-col justify-end rounded-2xl p-8 lg:flex",
+          className,
+        )}
+        style={{ backgroundImage: "var(--gradient-brand)" }}
+      >
+        <p className="font-display text-3xl font-extrabold text-primary-foreground">
+          Share your world, on your terms.
+        </p>
+        <p className="mt-2 max-w-sm text-sm text-primary-foreground/80">
+          Photos and videos with real privacy controls, a clean feed, and direct messages that respect
+          your inbox.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div
