@@ -52,3 +52,29 @@ export async function getSignedUrlFrom(bucket: string, path: string, seconds = 3
 export async function getSignedUrl(path: string, seconds = 3600) {
   return getSignedUrlFrom(MEDIA_BUCKET, path, seconds);
 }
+
+export const AUDIO_TYPES = ["audio/webm", "audio/mp4", "audio/mpeg", "audio/ogg", "audio/wav"];
+export const MAX_FILE_BYTES = 25 * 1024 * 1024;
+
+export type ChatAttachmentKind = "photo" | "video" | "audio" | "file";
+
+export function detectAttachmentKind(file: File): ChatAttachmentKind {
+  if (PHOTO_TYPES.includes(file.type) || file.type.startsWith("image/")) return "photo";
+  if (VIDEO_TYPES.includes(file.type) || file.type.startsWith("video/")) return "video";
+  if (AUDIO_TYPES.includes(file.type) || file.type.startsWith("audio/")) return "audio";
+  return "file";
+}
+
+export function validateChatFile(
+  file: File,
+): { ok: true; kind: ChatAttachmentKind } | { ok: false; error: string } {
+  if (file.size === 0) return { ok: false, error: "That file appears to be empty." };
+  const kind = detectAttachmentKind(file);
+  if (kind === "photo" && file.size > MAX_PHOTO_BYTES)
+    return { ok: false, error: "Photos must be 10 MB or smaller." };
+  if (kind === "video" && file.size > MAX_VIDEO_BYTES)
+    return { ok: false, error: "Videos must be 100 MB or smaller." };
+  if ((kind === "audio" || kind === "file") && file.size > MAX_FILE_BYTES)
+    return { ok: false, error: "Files must be 25 MB or smaller." };
+  return { ok: true, kind };
+}

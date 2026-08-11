@@ -274,25 +274,40 @@ export type Database = {
       }
       messages: {
         Row: {
-          body: string
+          attachment_kind: string | null
+          attachment_mime: string | null
+          attachment_path: string | null
+          body: string | null
           conversation_id: string
           created_at: string
+          flag_reason: string | null
+          flagged: boolean
           id: string
           read_at: string | null
           sender_id: string
         }
         Insert: {
-          body: string
+          attachment_kind?: string | null
+          attachment_mime?: string | null
+          attachment_path?: string | null
+          body?: string | null
           conversation_id: string
           created_at?: string
+          flag_reason?: string | null
+          flagged?: boolean
           id?: string
           read_at?: string | null
           sender_id: string
         }
         Update: {
-          body?: string
+          attachment_kind?: string | null
+          attachment_mime?: string | null
+          attachment_path?: string | null
+          body?: string | null
           conversation_id?: string
           created_at?: string
+          flag_reason?: string | null
+          flagged?: boolean
           id?: string
           read_at?: string | null
           sender_id?: string
@@ -300,6 +315,47 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      moderation_events: {
+        Row: {
+          category: string
+          conversation_id: string | null
+          created_at: string
+          excerpt: string
+          id: string
+          matched_terms: string
+          severity: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          conversation_id?: string | null
+          created_at?: string
+          excerpt?: string
+          id?: string
+          matched_terms?: string
+          severity?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          conversation_id?: string | null
+          created_at?: string
+          excerpt?: string
+          id?: string
+          matched_terms?: string
+          severity?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "moderation_events_conversation_id_fkey"
             columns: ["conversation_id"]
             isOneToOne: false
             referencedRelation: "conversations"
@@ -379,6 +435,7 @@ export type Database = {
           flagged: boolean
           id: string
           is_removed: boolean
+          is_short: boolean
           like_count: number
           media_kind: Database["public"]["Enums"]["media_kind"]
           media_path: string
@@ -394,6 +451,7 @@ export type Database = {
           flagged?: boolean
           id?: string
           is_removed?: boolean
+          is_short?: boolean
           like_count?: number
           media_kind: Database["public"]["Enums"]["media_kind"]
           media_path: string
@@ -409,6 +467,7 @@ export type Database = {
           flagged?: boolean
           id?: string
           is_removed?: boolean
+          is_short?: boolean
           like_count?: number
           media_kind?: Database["public"]["Enums"]["media_kind"]
           media_path?: string
@@ -426,6 +485,30 @@ export type Database = {
           },
         ]
       }
+      profile_media_history: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          url: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          url: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          url?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -433,13 +516,18 @@ export type Database = {
           cover_url: string | null
           created_at: string
           display_name: string
+          facebook_url: string | null
           id: string
+          instagram_url: string | null
           is_suspended: boolean
+          is_verified: boolean
           last_active_at: string
           setup_complete: boolean
           suspension_reason: string | null
           updated_at: string
           username: string
+          whatsapp_number: string | null
+          youtube_url: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -447,13 +535,18 @@ export type Database = {
           cover_url?: string | null
           created_at?: string
           display_name?: string
+          facebook_url?: string | null
           id: string
+          instagram_url?: string | null
           is_suspended?: boolean
+          is_verified?: boolean
           last_active_at?: string
           setup_complete?: boolean
           suspension_reason?: string | null
           updated_at?: string
           username: string
+          whatsapp_number?: string | null
+          youtube_url?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -461,13 +554,18 @@ export type Database = {
           cover_url?: string | null
           created_at?: string
           display_name?: string
+          facebook_url?: string | null
           id?: string
+          instagram_url?: string | null
           is_suspended?: boolean
+          is_verified?: boolean
           last_active_at?: string
           setup_complete?: boolean
           suspension_reason?: string | null
           updated_at?: string
           username?: string
+          whatsapp_number?: string | null
+          youtube_url?: string | null
         }
         Relationships: []
       }
@@ -545,6 +643,10 @@ export type Database = {
     }
     Functions: {
       are_mutual_follows: { Args: { _a: string; _b: string }; Returns: boolean }
+      can_read_message_attachment: {
+        Args: { _path: string; _uid: string }
+        Returns: boolean
+      }
       can_send_message: {
         Args: { _conv: string; _uid: string }
         Returns: boolean
