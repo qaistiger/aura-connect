@@ -28,7 +28,15 @@ export type Message = {
   body: string;
   read_at: string | null;
   created_at: string;
+  attachment_path: string | null;
+  attachment_kind: "photo" | "video" | "audio" | "file" | null;
+  attachment_mime: string | null;
+  flagged: boolean;
 };
+
+export const MESSAGE_SELECT =
+  "id,conversation_id,sender_id,body,read_at,created_at,attachment_path,attachment_kind,attachment_mime,flagged";
+
 
 export const CONVERSATION_SELECT =
   "id,user_a,user_b,requested_by,status,last_message_at,created_at," +
