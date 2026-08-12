@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Bell, Compass, Home, LogOut, MessageSquare, Plus, Settings, Shield, User } from "lucide-react";
+import { Bell, Clapperboard, Compass, Home, LogOut, MessageSquare, Plus, Settings, Shield, User } from "lucide-react";
 
 import { useAuth } from "@/lib/auth";
 import { useBranding } from "@/lib/branding";
@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { to: "/", label: "Home", icon: Home },
+  { to: "/shorts", label: "Shorts", icon: Clapperboard },
   { to: "/explore", label: "Explore", icon: Compass },
   { to: "/messages", label: "Chat", icon: MessageSquare },
   { to: "/notifications", label: "Alerts", icon: Bell },
@@ -134,7 +135,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <main className="mx-auto max-w-6xl px-4 pt-6 pb-28 md:pb-12">{children}</main>
 
       <nav className="glass-panel fixed inset-x-0 bottom-0 z-40 border-x-0 border-b-0 md:hidden">
-        <div className="grid grid-cols-5">
+        <div className="grid grid-cols-6">
           {NAV.map((item) => (
             <Link
               key={item.to}
