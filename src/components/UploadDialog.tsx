@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Globe2, Lock, UploadCloud, X } from "lucide-react";
+import { Clapperboard, Globe2, Lock, UploadCloud, X } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
 export function UploadDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
@@ -29,6 +30,7 @@ export function UploadDialog({ open, onOpenChange }: { open: boolean; onOpenChan
   const [preview, setPreview] = useState<string | null>(null);
   const [caption, setCaption] = useState("");
   const [visibility, setVisibility] = useState<"public" | "only_me">("public");
+  const [isShort, setIsShort] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const reset = () => {
@@ -36,6 +38,7 @@ export function UploadDialog({ open, onOpenChange }: { open: boolean; onOpenChan
     setPreview(null);
     setCaption("");
     setVisibility("public");
+    setIsShort(false);
     setProgress(0);
   };
 
@@ -48,6 +51,7 @@ export function UploadDialog({ open, onOpenChange }: { open: boolean; onOpenChan
     }
     setFile(selected);
     setKind(result.kind);
+    setIsShort(result.kind === "video");
     setPreview(URL.createObjectURL(selected));
   };
 
@@ -68,6 +72,7 @@ export function UploadDialog({ open, onOpenChange }: { open: boolean; onOpenChan
         bucket: "media",
         caption: caption.trim().slice(0, 2200),
         visibility,
+        is_short: kind === "video" ? isShort : false,
       });
       if (error) {
         await supabase.storage.from("media").remove([path]);
@@ -152,6 +157,21 @@ export function UploadDialog({ open, onOpenChange }: { open: boolean; onOpenChan
               placeholder="Say something about this…"
             />
           </div>
+
+          {kind === "video" && file ? (
+            <div className="flex items-center gap-3 rounded-xl border border-border bg-secondary/30 p-3">
+              <Clapperboard className="size-5 text-accent" />
+              <div className="min-w-0 flex-1">
+                <Label htmlFor="short-toggle" className="text-sm font-semibold">
+                  Publish as a Short
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  Shorts appear in the vertical Shorts feed and on your Shorts tab.
+                </p>
+              </div>
+              <Switch id="short-toggle" checked={isShort} onCheckedChange={setIsShort} />
+            </div>
+          ) : null}
 
           <div className="space-y-2">
             <Label>Who can see this?</Label>
