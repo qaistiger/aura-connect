@@ -12,6 +12,7 @@ import {
   Flag,
   Search,
   Shield,
+  MessageSquare,
   Trash2,
   Users,
   Video,
@@ -40,6 +41,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { BrandingPanel } from "@/components/admin/BrandingPanel";
+import { VerifiedBadge } from "@/components/VerifiedBadge";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -107,6 +109,7 @@ function AdminPage() {
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="content">Content</TabsTrigger>
           <TabsTrigger value="reports">Reports</TabsTrigger>
+          <TabsTrigger value="oversight">Chat oversight</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
           <TabsTrigger value="branding">Branding</TabsTrigger>
           <TabsTrigger value="system">System</TabsTrigger>
@@ -123,6 +126,9 @@ function AdminPage() {
         </TabsContent>
         <TabsContent value="reports" className="mt-5">
           <ReportsPanel />
+        </TabsContent>
+        <TabsContent value="oversight" className="mt-5">
+          <OversightPanel />
         </TabsContent>
         <TabsContent value="security" className="mt-5">
           <SecurityPanel />
@@ -273,7 +279,7 @@ function UsersPanel() {
     queryFn: async () => {
       let query = supabase
         .from("profiles")
-        .select("id,username,display_name,avatar_url,is_suspended,suspension_reason,created_at,last_active_at")
+        .select("id,username,display_name,avatar_url,is_suspended,suspension_reason,is_verified,created_at,last_active_at")
         .order("created_at", { ascending: false })
         .limit(50);
       if (q.length >= 2) query = query.or(`username.ilike.%${q}%,display_name.ilike.%${q}%`);
@@ -297,6 +303,19 @@ function UsersPanel() {
     },
     onSuccess: () => {
       toast.success("Account updated");
+      queryClient.invalidateQueries({ queryKey: ["admin"] });
+    },
+    onError: () => toast.error("That action didn't go through"),
+  });
+
+  const setVerified = useMutation({
+    mutationFn: async ({ id, verified }: { id: string; verified: boolean }) => {
+      const { error } = await supabase.from("profiles").update({ is_verified: verified }).eq("id", id);
+      if (error) throw error;
+      await audit(verified ? "verify_user" : "unverify_user", "user", id);
+    },
+    onSuccess: () => {
+      toast.success("Verification updated");
       queryClient.invalidateQueries({ queryKey: ["admin"] });
     },
     onError: () => toast.error("That action didn't go through"),
@@ -332,6 +351,17 @@ function UsersPanel() {
                 </p>
               </div>
               {u.is_suspended ? <Badge variant="destructive">Suspended</Badge> : <Badge variant="secondary">Active</Badge>}
+              <div className="flex items-center gap-2">
+                <VerifiedBadge className="size-4" />
+                <Label htmlFor={`verify-${u.id}`} className="text-xs text-muted-foreground">
+                  Verified
+                </Label>
+                <Switch
+                  id={`verify-${u.id}`}
+                  checked={!!u.is_verified}
+                  onCheckedChange={(v) => setVerified.mutate({ id: u.id, verified: v })}
+                />
+              </div>
               <Button asChild variant="ghost" size="sm">
                 <Link to="/u/$username" params={{ username: u.username }}>
                   View
@@ -650,6 +680,120 @@ function SystemPanel({ isSuperAdmin }: { isSuperAdmin: boolean }) {
           </ul>
         )}
       </div>
+    </div>
+  );
+}
+
+function OversightPanel() {
+  const [term, setTerm] = useState("");
+  const q = term.trim().toLowerCase();
+
+  const { data: events = [], isLoading: eventsLoading } = useQuery({
+    queryKey: ["admin", "moderation-events"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("moderation_events")
+        .select("id,category,matched_terms,excerpt,severity,created_at,conversation_id,user_id")
+        .order("created_at", { ascending: false })
+        .limit(60);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  const { data: messages = [], isLoading: messagesLoading } = useQuery({
+    queryKey: ["admin", "chat-logs", q],
+    queryFn: async () => {
+      let query = supabase
+        .from("messages")
+        .select("id,conversation_id,sender_id,body,flagged,flag_reason,attachment_kind,attachment_path,created_at")
+        .order("created_at", { ascending: false })
+        .limit(80);
+      if (q.length >= 2) query = query.ilike("body", `%${q}%`);
+      const { data, error } = await query;
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  return (
+    <div className="space-y-5">
+      <p className="rounded-xl border border-highlight/30 bg-highlight/10 p-3 text-xs text-muted-foreground">
+        Chat logs and shared media are surfaced here for safety, legal and policy review only. Access is
+        limited to administrators and every moderation action is written to the audit log.
+      </p>
+
+      <section className="space-y-3">
+        <h2 className="flex items-center gap-2 font-display text-sm font-bold tracking-wide uppercase">
+          <AlertTriangle className="size-4 text-destructive" /> Automated safety flags
+        </h2>
+        {eventsLoading ? (
+          <Skeleton className="h-32 w-full rounded-2xl" />
+        ) : events.length === 0 ? (
+          <p className="glass-panel rounded-2xl p-8 text-center text-sm text-muted-foreground">
+            No automated flags raised yet.
+          </p>
+        ) : (
+          <ul className="space-y-2">
+            {events.map((e) => (
+              <li key={e.id} className="glass-panel space-y-1 rounded-xl p-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="destructive">{e.category.replace(/_/g, " ")}</Badge>
+                  <span className="text-xs text-muted-foreground">
+                    {formatDistanceToNow(new Date(e.created_at), { addSuffix: true })}
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground">Matched: {e.matched_terms}</p>
+                <p className="line-clamp-3 text-sm">{e.excerpt}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="flex items-center gap-2 font-display text-sm font-bold tracking-wide uppercase">
+          <MessageSquare className="size-4 text-primary" /> Live chat log
+        </h2>
+        <div className="relative max-w-sm">
+          <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={term}
+            onChange={(e) => setTerm(e.target.value)}
+            placeholder="Search message text"
+            className="pl-9"
+          />
+        </div>
+        {messagesLoading ? (
+          <Skeleton className="h-40 w-full rounded-2xl" />
+        ) : messages.length === 0 ? (
+          <p className="glass-panel rounded-2xl p-8 text-center text-sm text-muted-foreground">
+            No messages match that search.
+          </p>
+        ) : (
+          <ul className="space-y-2">
+            {messages.map((m) => (
+              <li key={m.id} className="glass-panel space-y-1 rounded-xl p-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  {m.flagged ? (
+                    <Badge variant="destructive">{m.flag_reason ?? "flagged"}</Badge>
+                  ) : (
+                    <Badge variant="secondary">clean</Badge>
+                  )}
+                  {m.attachment_kind ? <Badge variant="outline">{m.attachment_kind}</Badge> : null}
+                  <span className="text-xs text-muted-foreground">
+                    {formatDistanceToNow(new Date(m.created_at), { addSuffix: true })}
+                  </span>
+                </div>
+                {m.body ? <p className="line-clamp-3 text-sm break-words">{m.body}</p> : null}
+                {m.attachment_path ? (
+                  <p className="truncate text-xs text-muted-foreground">Attachment: {m.attachment_path}</p>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }
