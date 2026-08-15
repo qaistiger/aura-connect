@@ -44,10 +44,34 @@ export function AppShell({ children }: { children: ReactNode }) {
     }
   }, [user, profile, pathname, navigate]);
 
+  // Authentication wall: the sign-in screen is the only public surface.
+  const isAuthRoute = pathname === "/auth";
+  useEffect(() => {
+    if (!loading && !user && !isAuthRoute) {
+      navigate({ to: "/auth", replace: true });
+    }
+  }, [loading, user, isAuthRoute, navigate]);
+
   const handleSignOut = async () => {
     await signOut();
-    navigate({ to: "/", replace: true });
+    navigate({ to: "/auth", replace: true });
   };
+
+  if (isAuthRoute || !user) {
+    return (
+      <div className="min-h-screen">
+        <main className="mx-auto max-w-6xl px-4 py-6">
+          {loading ? (
+            <div className="flex min-h-[60vh] items-center justify-center">
+              <div className="size-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            </div>
+          ) : isAuthRoute ? (
+            children
+          ) : null}
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
