@@ -21,12 +21,20 @@ export const Route = createFileRoute("/explore")({
       { property: "og:description", content: "Discover people and public media on ZYNORAIO." },
     ],
   }),
+  validateSearch: (search: Record<string, unknown>) => ({
+    q: typeof search.q === "string" ? search.q : undefined,
+  }),
   component: Explore,
 });
 
 function Explore() {
-  const [term, setTerm] = useState("");
+  const { q: rawQuery } = Route.useSearch();
+  const navigate = useNavigate();
+  const term = rawQuery ?? "";
   const q = term.trim().toLowerCase();
+
+  const setQuery = (value: string) =>
+    navigate({ to: "/explore", search: value.trim() ? { q: value.trim() } : {}, replace: true });
 
   const { data: people = [], isLoading: peopleLoading } = useQuery({
     queryKey: ["search-people", q],
