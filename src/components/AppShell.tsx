@@ -27,7 +27,7 @@ const NAV = [
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const { user, profile, isAdmin, signOut } = useAuth();
+  const { user, loading, profile, isAdmin, signOut } = useAuth();
   const [uploadOpen, setUploadOpen] = useState(false);
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
