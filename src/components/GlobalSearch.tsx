@@ -56,7 +56,7 @@ export function GlobalSearch({
       onSearch(q);
       return;
     }
-    void navigate({ to: "/explore", search: q ? { q } : {} });
+    void navigate({ to: "/explore", search: { q: q || undefined } });
   };
 
   const toggleVoice = () => {

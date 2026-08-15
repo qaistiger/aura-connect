@@ -120,7 +120,7 @@ function Hero() {
           <Link to="/auth">Create your account</Link>
         </Button>
         <Button asChild size="lg" variant="outline">
-          <Link to="/explore">Explore public posts</Link>
+          <Link to="/explore" search={{ q: undefined }}>Explore public posts</Link>
         </Button>
       </div>
     </section>

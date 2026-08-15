@@ -28,13 +28,13 @@ export const Route = createFileRoute("/explore")({
 });
 
 function Explore() {
-  const { q: rawQuery } = Route.useSearch();
+  const search = Route.useSearch();
   const navigate = useNavigate();
-  const term = rawQuery ?? "";
+  const term = search['q'] ?? "";
   const q = term.trim().toLowerCase();
 
   const setQuery = (value: string) =>
-    navigate({ to: "/explore", search: value.trim() ? { q: value.trim() } : {}, replace: true });
+    navigate({ to: "/explore", search: { q: value.trim() || undefined }, replace: true });
 
   const { data: people = [], isLoading: peopleLoading } = useQuery({
     queryKey: ["search-people", q],
@@ -77,16 +77,11 @@ function Explore() {
         </p>
       </div>
 
-      <div className="relative">
-        <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          value={term}
-          onChange={(e) => setTerm(e.target.value)}
-          placeholder="Search people, usernames or captions"
-          className="pl-9"
-          aria-label="Search ZYNORAIO"
-        />
-      </div>
+      <GlobalSearch
+        initialValue={term}
+        onSearch={setQuery}
+        placeholder="Search people, usernames, captions, videos and reels"
+      />
 
       <Tabs defaultValue="media">
         <TabsList>
