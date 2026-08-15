@@ -1,34 +1,40 @@
-import { useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Search } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { POST_SELECT, type FeedPost } from "@/lib/types";
 import { SignedMedia } from "@/components/SignedMedia";
 import { UserAvatar } from "@/components/UserAvatar";
-import { Input } from "@/components/ui/input";
+import { GlobalSearch } from "@/components/GlobalSearch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const Route = createFileRoute("/explore")({
   head: () => ({
     meta: [
-      { title: "Explore AURALIS — people, photos and video" },
+      { title: "Explore ZYNORAIO — people, photos and video" },
       {
         name: "description",
-        content: "Search AURALIS for people and discover public photos and videos. Private posts never appear here.",
+        content: "Search ZYNORAIO for people and discover public photos and videos. Private posts never appear here.",
       },
-      { property: "og:title", content: "Explore AURALIS" },
-      { property: "og:description", content: "Discover people and public media on AURALIS." },
+      { property: "og:title", content: "Explore ZYNORAIO" },
+      { property: "og:description", content: "Discover people and public media on ZYNORAIO." },
     ],
+  }),
+  validateSearch: (search: Record<string, unknown>) => ({
+    q: typeof search['q'] === "string" ? (search['q'] as string) : undefined,
   }),
   component: Explore,
 });
 
 function Explore() {
-  const [term, setTerm] = useState("");
+  const search = Route.useSearch();
+  const navigate = useNavigate();
+  const term = search['q'] ?? "";
   const q = term.trim().toLowerCase();
+
+  const setQuery = (value: string) =>
+    navigate({ to: "/explore", search: { q: value.trim() || undefined }, replace: true });
 
   const { data: people = [], isLoading: peopleLoading } = useQuery({
     queryKey: ["search-people", q],
@@ -71,16 +77,11 @@ function Explore() {
         </p>
       </div>
 
-      <div className="relative">
-        <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          value={term}
-          onChange={(e) => setTerm(e.target.value)}
-          placeholder="Search people, usernames or captions"
-          className="pl-9"
-          aria-label="Search AURALIS"
-        />
-      </div>
+      <GlobalSearch
+        initialValue={term}
+        onSearch={setQuery}
+        placeholder="Search people, usernames, captions, videos and reels"
+      />
 
       <Tabs defaultValue="media">
         <TabsList>

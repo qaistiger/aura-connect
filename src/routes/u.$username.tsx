@@ -22,12 +22,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export const Route = createFileRoute("/u/$username")({
   head: ({ params }) => ({
     meta: [
-      { title: `@${params.username} on AURALIS` },
+      { title: `@${params.username} on ZYNORAIO` },
       {
         name: "description",
-        content: `See public photos, videos and shorts shared by @${params.username} on AURALIS.`,
+        content: `See public photos, videos and shorts shared by @${params.username} on ZYNORAIO.`,
       },
-      { property: "og:title", content: `@${params.username} on AURALIS` },
+      { property: "og:title", content: `@${params.username} on ZYNORAIO` },
       { property: "og:description", content: `Public posts from @${params.username}.` },
       { property: "og:type", content: "profile" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/u/$username")({
   notFoundComponent: () => (
     <div className="glass-panel mx-auto max-w-md rounded-2xl p-10 text-center">
       <h1 className="font-display text-lg font-bold">Account not found</h1>
-      <p className="mt-2 text-sm text-muted-foreground">This username doesn't exist on AURALIS.</p>
+      <p className="mt-2 text-sm text-muted-foreground">This username doesn't exist on ZYNORAIO.</p>
     </div>
   ),
 });

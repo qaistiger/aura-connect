@@ -78,13 +78,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "AURALIS — Share your world, privately or publicly" },
+      { title: "ZYNORAIO — Share your world, privately or publicly" },
       {
         name: "description",
         content:
-          "AURALIS is a premium social platform for photos and short video, with per-post privacy controls and serious moderation.",
+          "ZYNORAIO is a premium social platform for photos and short video, with per-post privacy controls and serious moderation.",
       },
-      { property: "og:title", content: "AURALIS" },
+      { property: "og:title", content: "ZYNORAIO" },
       { property: "og:description", content: "Share your world, privately or publicly." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

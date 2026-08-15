@@ -257,7 +257,7 @@ export function PostCard({ post }: { post: FeedPost }) {
 
   const share = async () => {
     try {
-      if (navigator.share) await navigator.share({ title: `${authorName} on AURALIS`, url: postUrl });
+      if (navigator.share) await navigator.share({ title: `${authorName} on ZYNORAIO`, url: postUrl });
       else {
         await navigator.clipboard.writeText(postUrl);
         toast.success("Link copied");

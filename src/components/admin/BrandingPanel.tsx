@@ -50,7 +50,7 @@ export function BrandingPanel() {
   const saveBranding = useMutation({
     mutationFn: async (next: { site_name?: string; tagline?: string; logo_path?: string | null }) => {
       const value = {
-        site_name: (next.site_name ?? siteName).trim() || "AURALIS",
+        site_name: (next.site_name ?? siteName).trim() || "ZYNORAIO",
         tagline: (next.tagline ?? tagline).trim(),
         logo_path: next.logo_path === undefined ? branding.logo_path : next.logo_path,
       };

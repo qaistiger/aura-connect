@@ -11,10 +11,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 export const Route = createFileRoute("/_authenticated/notifications")({
   head: () => ({
     meta: [
-      { title: "Notifications — AURALIS" },
-      { name: "description", content: "New followers and reactions to your AURALIS posts, all in one place." },
-      { property: "og:title", content: "Notifications — AURALIS" },
-      { property: "og:description", content: "Your latest AURALIS activity." },
+      { title: "Notifications — ZYNORAIO" },
+      { name: "description", content: "New followers and reactions to your ZYNORAIO posts, all in one place." },
+      { property: "og:title", content: "Notifications — ZYNORAIO" },
+      { property: "og:description", content: "Your latest ZYNORAIO activity." },
     ],
   }),
   component: NotificationsPage,

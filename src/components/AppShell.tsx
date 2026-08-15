@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { useBranding } from "@/lib/branding";
 import { BrandLockup, BrandMark } from "@/components/Brand";
 import { UploadDialog } from "@/components/UploadDialog";
+import { GlobalSearch } from "@/components/GlobalSearch";
 import { UserAvatar } from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,7 +28,7 @@ const NAV = [
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const { user, profile, isAdmin, signOut } = useAuth();
+  const { user, loading, profile, isAdmin, signOut } = useAuth();
   const [uploadOpen, setUploadOpen] = useState(false);
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -35,7 +36,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (typeof document === "undefined") return;
-    document.title = document.title.replace(/AURALIS/g, branding.site_name);
+    document.title = document.title.replace(/ZYNORAIO/g, branding.site_name);
   }, [branding.site_name, pathname]);
 
   useEffect(() => {
@@ -44,10 +45,34 @@ export function AppShell({ children }: { children: ReactNode }) {
     }
   }, [user, profile, pathname, navigate]);
 
+  // Authentication wall: the sign-in screen is the only public surface.
+  const isAuthRoute = pathname === "/auth";
+  useEffect(() => {
+    if (!loading && !user && !isAuthRoute) {
+      navigate({ to: "/auth", replace: true });
+    }
+  }, [loading, user, isAuthRoute, navigate]);
+
   const handleSignOut = async () => {
     await signOut();
-    navigate({ to: "/", replace: true });
+    navigate({ to: "/auth", replace: true });
   };
+
+  if (isAuthRoute || !user) {
+    return (
+      <div className="min-h-screen">
+        <main className="mx-auto max-w-6xl px-4 py-6">
+          {loading ? (
+            <div className="flex min-h-[60vh] items-center justify-center">
+              <div className="size-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            </div>
+          ) : isAuthRoute ? (
+            children
+          ) : null}
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -61,6 +86,10 @@ export function AppShell({ children }: { children: ReactNode }) {
               <BrandMark />
             </span>
           </Link>
+
+          <div className="mx-2 hidden max-w-sm flex-1 lg:block">
+            <GlobalSearch placeholder="Search ZYNORAIO" />
+          </div>
 
           <nav className="ml-auto hidden items-center gap-1 md:flex">
             {NAV.map((item) => (
@@ -129,6 +158,10 @@ export function AppShell({ children }: { children: ReactNode }) {
               </Button>
             )}
           </div>
+        </div>
+
+        <div className="mx-auto max-w-6xl px-4 pb-3 lg:hidden">
+          <GlobalSearch placeholder="Search ZYNORAIO" />
         </div>
       </header>
 

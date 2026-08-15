@@ -19,14 +19,14 @@ import { Separator } from "@/components/ui/separator";
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     meta: [
-      { title: "Account settings — AURALIS" },
+      { title: "Account settings — ZYNORAIO" },
       {
         name: "description",
         content:
-          "Update your AURALIS username, display name, bio, photos, connected accounts and security options.",
+          "Update your ZYNORAIO username, display name, bio, photos, connected accounts and security options.",
       },
-      { property: "og:title", content: "Account settings — AURALIS" },
-      { property: "og:description", content: "Manage your AURALIS profile and security." },
+      { property: "og:title", content: "Account settings — ZYNORAIO" },
+      { property: "og:description", content: "Manage your ZYNORAIO profile and security." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -322,7 +322,7 @@ function SettingsPage() {
         </h2>
         <p className="text-sm text-muted-foreground">
           Your account is protected by your identity provider (Google or Apple). Passwords and two-factor
-          settings are managed there, so AURALIS never stores a password for you.
+          settings are managed there, so ZYNORAIO never stores a password for you.
         </p>
         <Separator />
         <div className="space-y-1 text-sm">
