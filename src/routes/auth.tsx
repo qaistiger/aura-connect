@@ -105,12 +105,72 @@ function AuthPage() {
       <div className="order-1 flex flex-col items-center lg:order-2">
       <BrandLockup className="mb-8" />
       <div className="glass-panel w-full rounded-2xl p-8">
-        <h1 className="font-display text-2xl font-extrabold">Sign in</h1>
+        <h1 className="font-display text-2xl font-extrabold">
+          {mode === "signin" ? "Sign in" : "Create your account"}
+        </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Continue to {branding.site_name} with a trusted provider — no passwords shared.
+          {mode === "signin"
+            ? `Sign in to continue to ${branding.site_name}.`
+            : `Join ${branding.site_name} — you'll pick your username next.`}
         </p>
 
-        <div className="mt-6 space-y-3">
+        <form onSubmit={submitEmail} className="mt-6 space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email address</Label>
+            <Input
+              id="email"
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                autoComplete={mode === "signin" ? "current-password" : "new-password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="pr-10"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute top-1/2 right-2 -translate-y-1/2 rounded-md p-1.5 text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+              </button>
+            </div>
+          </div>
+          <Button type="submit" className="w-full" size="lg" disabled={pending !== null}>
+            {pending === "email" ? "Please wait…" : mode === "signin" ? "Sign In" : "Create account"}
+          </Button>
+          <p className="text-center text-xs text-muted-foreground">
+            {mode === "signin" ? "New to " : "Already have an account? "}
+            {mode === "signin" ? branding.site_name : null}
+            <button
+              type="button"
+              className="ml-1 font-semibold text-primary hover:underline"
+              onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
+            >
+              {mode === "signin" ? "Create an account" : "Sign in instead"}
+            </button>
+          </p>
+        </form>
+
+        <div className="my-6 flex items-center gap-3 text-[11px] font-semibold tracking-widest text-muted-foreground uppercase">
+          <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
+        </div>
+
+        <div className="space-y-3">
           <Button
             className="w-full justify-center gap-2"
             size="lg"
