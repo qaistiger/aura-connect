@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { Apple, Chrome, Lock, ShieldCheck, Sparkles } from "lucide-react";
+import { Apple, Chrome, Eye, EyeOff, Lock, ShieldCheck, Sparkles } from "lucide-react";
 
 import { lovable } from "@/integrations/lovable/index";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { BrandLockup } from "@/components/Brand";
 import { LoginShowcase } from "@/components/LoginShowcase";
 import { useBranding } from "@/lib/branding";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
