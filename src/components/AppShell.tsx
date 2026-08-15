@@ -86,6 +86,10 @@ export function AppShell({ children }: { children: ReactNode }) {
             </span>
           </Link>
 
+          <div className="mx-2 hidden max-w-sm flex-1 lg:block">
+            <GlobalSearch placeholder="Search ZYNORAIO" />
+          </div>
+
           <nav className="ml-auto hidden items-center gap-1 md:flex">
             {NAV.map((item) => (
               <Link
