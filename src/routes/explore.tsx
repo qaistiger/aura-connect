@@ -14,13 +14,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export const Route = createFileRoute("/explore")({
   head: () => ({
     meta: [
-      { title: "Explore AURALIS — people, photos and video" },
+      { title: "Explore ZYNORAIO — people, photos and video" },
       {
         name: "description",
-        content: "Search AURALIS for people and discover public photos and videos. Private posts never appear here.",
+        content: "Search ZYNORAIO for people and discover public photos and videos. Private posts never appear here.",
       },
-      { property: "og:title", content: "Explore AURALIS" },
-      { property: "og:description", content: "Discover people and public media on AURALIS." },
+      { property: "og:title", content: "Explore ZYNORAIO" },
+      { property: "og:description", content: "Discover people and public media on ZYNORAIO." },
     ],
   }),
   component: Explore,
@@ -78,7 +78,7 @@ function Explore() {
           onChange={(e) => setTerm(e.target.value)}
           placeholder="Search people, usernames or captions"
           className="pl-9"
-          aria-label="Search AURALIS"
+          aria-label="Search ZYNORAIO"
         />
       </div>
 

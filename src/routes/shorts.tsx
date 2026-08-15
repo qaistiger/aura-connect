@@ -16,12 +16,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 export const Route = createFileRoute("/shorts")({
   head: () => ({
     meta: [
-      { title: "Shorts — quick vertical videos on AURALIS" },
+      { title: "Shorts — quick vertical videos on ZYNORAIO" },
       {
         name: "description",
-        content: "Scroll a full-screen feed of short vertical videos from creators across AURALIS.",
+        content: "Scroll a full-screen feed of short vertical videos from creators across ZYNORAIO.",
       },
-      { property: "og:title", content: "Shorts on AURALIS" },
+      { property: "og:title", content: "Shorts on ZYNORAIO" },
       { property: "og:description", content: "A full-screen feed of short vertical videos." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

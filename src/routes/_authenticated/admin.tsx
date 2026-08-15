@@ -46,10 +46,10 @@ import { VerifiedBadge } from "@/components/VerifiedBadge";
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
-      { title: "Admin console — AURALIS" },
-      { name: "description", content: "Moderation, analytics and platform controls for AURALIS administrators." },
-      { property: "og:title", content: "Admin console — AURALIS" },
-      { property: "og:description", content: "Moderation and analytics for AURALIS." },
+      { title: "Admin console — ZYNORAIO" },
+      { name: "description", content: "Moderation, analytics and platform controls for ZYNORAIO administrators." },
+      { property: "og:title", content: "Admin console — ZYNORAIO" },
+      { property: "og:description", content: "Moderation and analytics for ZYNORAIO." },
     ],
   }),
   component: AdminPage,

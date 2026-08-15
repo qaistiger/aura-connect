@@ -12,12 +12,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "AURALIS — Your feed" },
+      { title: "ZYNORAIO — Your feed" },
       {
         name: "description",
-        content: "A calm, premium feed of public photos and videos from the people you follow on AURALIS.",
+        content: "A calm, premium feed of public photos and videos from the people you follow on ZYNORAIO.",
       },
-      { property: "og:title", content: "AURALIS — Your feed" },
+      { property: "og:title", content: "ZYNORAIO — Your feed" },
       { property: "og:description", content: "Share your world, privately or publicly." },
     ],
   }),
@@ -47,7 +47,7 @@ function Feed() {
       <div className="space-y-5">
         {!user && !loading ? <Hero /> : null}
 
-        <h1 className="sr-only">AURALIS feed</h1>
+        <h1 className="sr-only">ZYNORAIO feed</h1>
 
         {isLoading ? (
           <div className="space-y-5">
@@ -72,7 +72,7 @@ function Feed() {
 
       <aside className="hidden space-y-4 lg:block">
         <div className="glass-panel rounded-2xl p-5">
-          <h2 className="font-display text-sm font-bold tracking-wide uppercase">Why AURALIS</h2>
+          <h2 className="font-display text-sm font-bold tracking-wide uppercase">Why ZYNORAIO</h2>
           <ul className="mt-4 space-y-4 text-sm text-muted-foreground">
             <li className="flex gap-3">
               <Lock className="mt-0.5 size-4 shrink-0 text-primary" />
@@ -108,7 +108,7 @@ function Hero() {
       className="overflow-hidden rounded-3xl border border-border p-8 sm:p-12"
       style={{ backgroundImage: "var(--gradient-surface)" }}
     >
-      <p className="text-xs font-semibold tracking-[0.2em] text-primary uppercase">Welcome to AURALIS</p>
+      <p className="text-xs font-semibold tracking-[0.2em] text-primary uppercase">Welcome to ZYNORAIO</p>
       <h2 className="mt-3 max-w-xl text-3xl leading-tight font-extrabold sm:text-4xl">
         Share your world — <span className="brand-text">publicly or privately.</span>
       </h2>

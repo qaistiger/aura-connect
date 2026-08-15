@@ -35,7 +35,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (typeof document === "undefined") return;
-    document.title = document.title.replace(/AURALIS/g, branding.site_name);
+    document.title = document.title.replace(/ZYNORAIO/g, branding.site_name);
   }, [branding.site_name, pathname]);
 
   useEffect(() => {

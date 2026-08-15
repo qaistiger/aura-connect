@@ -13,12 +13,12 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Sign in to AURALIS" },
+      { title: "Sign in to ZYNORAIO" },
       {
         name: "description",
-        content: "Sign in to AURALIS with Google or Apple to post photos and videos with full privacy control.",
+        content: "Sign in to ZYNORAIO with Google or Apple to post photos and videos with full privacy control.",
       },
-      { property: "og:title", content: "Sign in to AURALIS" },
+      { property: "og:title", content: "Sign in to ZYNORAIO" },
       { property: "og:description", content: "Secure sign-in with Google or Apple." },
     ],
   }),

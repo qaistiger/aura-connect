@@ -11,7 +11,7 @@ export type Branding = {
 };
 
 export const DEFAULT_BRANDING: Branding = {
-  site_name: "AURALIS",
+  site_name: "ZYNORAIO",
   tagline: "Your world, your feed",
   logo_path: null,
 };
