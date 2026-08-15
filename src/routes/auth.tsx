@@ -32,7 +32,46 @@ function AuthPage() {
   const { user, loading } = useAuth();
   const branding = useBranding();
   const navigate = useNavigate();
-  const [pending, setPending] = useState<"google" | "apple" | null>(null);
+  const [pending, setPending] = useState<"google" | "apple" | "email" | null>(null);
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const submitEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const address = email.trim();
+    if (!address || password.length < 6) {
+      toast.error("Check your details", { description: "Enter your email and a password of 6+ characters." });
+      return;
+    }
+    setPending("email");
+    try {
+      if (mode === "signin") {
+        const { error } = await supabase.auth.signInWithPassword({ email: address, password });
+        if (error) throw error;
+        navigate({ to: "/", replace: true });
+      } else {
+        const { data, error } = await supabase.auth.signUp({
+          email: address,
+          password,
+          options: { emailRedirectTo: window.location.origin },
+        });
+        if (error) throw error;
+        if (data.session) navigate({ to: "/", replace: true });
+        else
+          toast.success("Check your email", {
+            description: "Confirm your address to finish creating your account.",
+          });
+      }
+    } catch (error) {
+      toast.error(mode === "signin" ? "Sign-in failed" : "Sign-up failed", {
+        description: error instanceof Error ? error.message : "Please try again.",
+      });
+    } finally {
+      setPending(null);
+    }
+  };
 
   useEffect(() => {
     if (!loading && user) navigate({ to: "/", replace: true });
