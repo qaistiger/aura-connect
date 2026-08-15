@@ -1,13 +1,11 @@
-import { useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Search } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { POST_SELECT, type FeedPost } from "@/lib/types";
 import { SignedMedia } from "@/components/SignedMedia";
 import { UserAvatar } from "@/components/UserAvatar";
-import { Input } from "@/components/ui/input";
+import { GlobalSearch } from "@/components/GlobalSearch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
