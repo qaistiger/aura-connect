@@ -76,7 +76,7 @@ export function LoginShowcase({ className }: { className?: string }) {
     return (
       <div
         className={cn(
-          "glass-panel hidden aspect-[4/3] w-full flex-col justify-end rounded-2xl p-8 lg:flex",
+          "glass-panel flex h-full min-h-[420px] w-full flex-col justify-end rounded-2xl p-8",
           className,
         )}
         style={{ backgroundImage: "var(--gradient-brand)" }}
@@ -94,7 +94,7 @@ export function LoginShowcase({ className }: { className?: string }) {
 
   return (
     <div
-      className={cn("glass-panel overflow-hidden rounded-2xl", className)}
+      className={cn("glass-panel flex h-full flex-col overflow-hidden rounded-2xl", className)}
       onTouchStart={(e) => {
         touchX.current = e.touches[0]?.clientX ?? null;
       }}
@@ -106,13 +106,26 @@ export function LoginShowcase({ className }: { className?: string }) {
         if (Math.abs(delta) > 40) go(index + (delta < 0 ? 1 : -1));
         touchX.current = null;
       }}
+      onPointerDown={(e) => {
+        if (e.pointerType === "touch") return;
+        touchX.current = e.clientX;
+      }}
+      onPointerUp={(e) => {
+        if (e.pointerType === "touch") return;
+        const start = touchX.current;
+        if (start === null) return;
+        const delta = e.clientX - start;
+        if (Math.abs(delta) > 40) go(index + (delta < 0 ? 1 : -1));
+        touchX.current = null;
+      }}
     >
-      <div className="relative aspect-16/10 w-full overflow-hidden">
+      <div className="relative min-h-[320px] flex-1 w-full overflow-hidden select-none">
         {slides.map((s, i) => (
           <img
             key={s.id}
             src={s.url}
             alt={s.caption || "Showcase photo"}
+            draggable={false}
             loading={i === 0 ? "eager" : "lazy"}
             className={cn(
               "absolute inset-0 size-full object-cover transition-opacity duration-700 ease-out",
@@ -124,6 +137,27 @@ export function LoginShowcase({ className }: { className?: string }) {
           <p className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/90 to-transparent p-4 text-sm font-medium">
             {slides[index]?.caption}
           </p>
+        ) : null}
+
+        {slides.length > 1 ? (
+          <>
+            <button
+              type="button"
+              aria-label="Previous photo"
+              onClick={() => go(index - 1)}
+              className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full border border-border/60 bg-background/70 p-2 backdrop-blur transition-colors hover:bg-background"
+            >
+              <ChevronLeft className="size-4" />
+            </button>
+            <button
+              type="button"
+              aria-label="Next photo"
+              onClick={() => go(index + 1)}
+              className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full border border-border/60 bg-background/70 p-2 backdrop-blur transition-colors hover:bg-background"
+            >
+              <ChevronRight className="size-4" />
+            </button>
+          </>
         ) : null}
       </div>
 
