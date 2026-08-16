@@ -511,6 +511,36 @@ export type Database = {
           },
         ]
       }
+      profile_locations: {
+        Row: {
+          created_at: string
+          label: string
+          latitude: number | null
+          longitude: number | null
+          share_consent: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          label?: string
+          latitude?: number | null
+          longitude?: number | null
+          share_consent?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          label?: string
+          latitude?: number | null
+          longitude?: number | null
+          share_consent?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profile_media_history: {
         Row: {
           created_at: string
