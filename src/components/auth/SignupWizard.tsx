@@ -111,9 +111,9 @@ export function SignupWizard({ onDone, onCancel }: Props) {
     if (!userId) return;
     setBusy(true);
     try {
-      const patch: Record<string, string> = {};
-      if (avatar) patch['avatar_url'] = (await uploadPhoto(avatar, "avatar")) ?? "";
-      if (cover) patch['cover_url'] = (await uploadPhoto(cover, "cover")) ?? "";
+      const patch: { avatar_url?: string; cover_url?: string } = {};
+      if (avatar) patch.avatar_url = (await uploadPhoto(avatar, "avatar")) ?? "";
+      if (cover) patch.cover_url = (await uploadPhoto(cover, "cover")) ?? "";
       if (Object.keys(patch).length > 0) {
         const { error } = await supabase.from("profiles").update(patch).eq("id", userId);
         if (error) throw error;
@@ -178,8 +178,14 @@ export function SignupWizard({ onDone, onCancel }: Props) {
 
   const pick = (file: File | undefined, set: (f: File) => void) => {
     if (!file) return;
-    if (!file.type.startsWith("image/")) return toast.error("Choose an image file");
-    if (file.size > MAX_PHOTO_BYTES) return toast.error("Images must be 10 MB or smaller");
+    if (!file.type.startsWith("image/")) {
+      toast.error("Choose an image file");
+      return;
+    }
+    if (file.size > MAX_PHOTO_BYTES) {
+      toast.error("Images must be 10 MB or smaller");
+      return;
+    }
     set(file);
   };
 
