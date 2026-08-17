@@ -19,7 +19,7 @@ export function BrandMark({ className }: { className?: string }) {
     <span
       aria-hidden
       className={cn(
-        "inline-flex size-9 shrink-0 items-center justify-center rounded-xl text-base font-black tracking-tight text-primary-foreground",
+        "inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-sm font-black tracking-tight text-primary-foreground",
         className,
       )}
       style={{ backgroundImage: "var(--gradient-brand)" }}
