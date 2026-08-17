@@ -80,10 +80,10 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4">
           <Link to="/" className="flex items-center">
             <span className="hidden sm:block">
-              <BrandLockup size="lg" />
+              <BrandLockup size="lg" className="gap-2" />
             </span>
             <span className="sm:hidden">
-              <BrandMark className="size-10" />
+              <BrandMark className="size-8" />
             </span>
           </Link>
 
