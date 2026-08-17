@@ -44,7 +44,7 @@ function Feed() {
 
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
-      <div className="space-y-5">
+      <div className="min-w-0 space-y-5">
         {!user && !loading ? <Hero /> : null}
 
         <h1 className="sr-only">ZYNORAIO feed</h1>
