@@ -161,7 +161,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </div>
 
-        <div className="mx-auto max-w-6xl px-4 pb-3 lg:hidden">
+        <div className="px-3 pb-3 md:hidden">
           <GlobalSearch placeholder="Search ZYNORAIO" />
         </div>
       </header>
