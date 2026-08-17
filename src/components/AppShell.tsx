@@ -4,7 +4,7 @@ import { Bell, Clapperboard, Compass, Hop as Home, LogOut, MessageSquare, Plus, 
 
 import { useAuth } from "@/lib/auth";
 import { useBranding } from "@/lib/branding";
-import { BrandLockup, BrandMark } from "@/components/Brand";
+import { BrandLockup } from "@/components/Brand";
 import { UploadDialog } from "@/components/UploadDialog";
 import { GlobalSearch } from "@/components/GlobalSearch";
 import { UserAvatar } from "@/components/UserAvatar";
