@@ -10,7 +10,7 @@ export function BrandMark({ className }: { className?: string }) {
       <img
         src={logo}
         alt={`${branding.site_name} logo`}
-        className={cn("h-11 w-auto max-w-[180px] shrink-0 object-contain", className)}
+        className={cn("h-8 w-auto max-w-[120px] shrink-0 object-contain", className)}
       />
     );
   }
