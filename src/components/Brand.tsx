@@ -45,7 +45,7 @@ export function BrandLockup({
       : size === "lg"
         ? "h-10 max-w-[160px] size-auto min-h-10 min-w-10 rounded-xl text-xl"
         : size === "sm"
-          ? "h-7 max-w-[96px] size-auto min-h-7 min-w-7 rounded-md text-xs"
+          ? "size-7 max-w-[96px] rounded-md text-sm"
           : "";
   const text =
     size === "xl"
