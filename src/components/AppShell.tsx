@@ -79,12 +79,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <header className="glass-panel sticky top-0 z-40 border-x-0 border-t-0">
         <div className="flex h-14 w-full items-center gap-2 pr-3 pl-2 sm:gap-3 sm:pr-4 sm:pl-3">
           <Link to="/" className="flex shrink-0 items-center">
-            <span className="hidden sm:block">
-              <BrandLockup size="sm" />
-            </span>
-            <span className="sm:hidden">
-              <BrandMark className="size-7" />
-            </span>
+            <BrandLockup size="sm" />
           </Link>
 
           <div className="hidden min-w-0 flex-1 md:block">
