@@ -4,7 +4,7 @@ import { Bell, Clapperboard, Compass, Hop as Home, LogOut, MessageSquare, Plus, 
 
 import { useAuth } from "@/lib/auth";
 import { useBranding } from "@/lib/branding";
-import { BrandLockup, BrandMark } from "@/components/Brand";
+import { BrandLockup } from "@/components/Brand";
 import { UploadDialog } from "@/components/UploadDialog";
 import { GlobalSearch } from "@/components/GlobalSearch";
 import { UserAvatar } from "@/components/UserAvatar";
@@ -77,39 +77,35 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen">
       <header className="glass-panel sticky top-0 z-40 border-x-0 border-t-0">
-        <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4">
-          <Link to="/" className="flex items-center">
-            <span className="hidden sm:block">
-              <BrandLockup size="lg" className="gap-2" />
-            </span>
-            <span className="sm:hidden">
-              <BrandMark className="size-8" />
-            </span>
+        <div className="flex h-14 w-full items-center gap-2 pr-3 pl-2 sm:gap-3 sm:pr-4 sm:pl-3">
+          <Link to="/" className="flex shrink-0 items-center">
+            <BrandLockup size="sm" />
           </Link>
 
-          <div className="mx-2 hidden max-w-sm flex-1 lg:block">
+          <div className="hidden min-w-0 flex-1 md:block">
             <GlobalSearch placeholder="Search ZYNORAIO" />
           </div>
 
-          <nav className="ml-auto hidden items-center gap-1 md:flex">
+          <nav className="ml-auto hidden shrink-0 items-center gap-1 md:flex">
             {NAV.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
                 className={cn(
-                  "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  "flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium transition-colors lg:px-3",
                   pathname === item.to
                     ? "bg-secondary text-foreground"
                     : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
                 )}
+                title={item.label}
               >
-                <item.icon className="size-4" />
-                {item.label}
+                <item.icon className="size-4 shrink-0" />
+                <span className="hidden lg:inline">{item.label}</span>
               </Link>
             ))}
           </nav>
 
-          <div className="ml-auto flex items-center gap-2 md:ml-2">
+          <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-1">
             {user ? (
               <>
                 <Button size="sm" onClick={() => setUploadOpen(true)} className="gap-1.5">
@@ -160,7 +156,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </div>
 
-        <div className="mx-auto max-w-6xl px-4 pb-3 lg:hidden">
+        <div className="px-3 pb-3 md:hidden">
           <GlobalSearch placeholder="Search ZYNORAIO" />
         </div>
       </header>
