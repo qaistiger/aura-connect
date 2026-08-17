@@ -34,7 +34,7 @@ export function BrandLockup({
   size = "md",
 }: {
   className?: string;
-  size?: "md" | "lg" | "xl";
+  size?: "sm" | "md" | "lg" | "xl";
 }) {
   const branding = useBranding();
   const logo = useBrandingLogoUrl(branding.logo_path);
@@ -44,14 +44,27 @@ export function BrandLockup({
       ? "h-16 max-w-[260px] size-auto min-h-16 min-w-16 rounded-2xl text-3xl"
       : size === "lg"
         ? "h-10 max-w-[160px] size-auto min-h-10 min-w-10 rounded-xl text-xl"
-        : "";
+        : size === "sm"
+          ? "h-7 max-w-[96px] size-auto min-h-7 min-w-7 rounded-md text-xs"
+          : "";
   const text =
-    size === "xl" ? "text-3xl" : size === "lg" ? "text-xl" : "text-base";
+    size === "xl"
+      ? "text-3xl"
+      : size === "lg"
+        ? "text-xl"
+        : size === "sm"
+          ? "text-base sm:text-lg"
+          : "text-base";
 
   return (
-    <span className={cn("flex items-center gap-3", className)}>
+    <span className={cn("flex min-w-0 items-center gap-2", className)}>
       <BrandMark className={mark} />
-      <span className={cn("font-display font-extrabold tracking-tight", text)}>
+      <span
+        className={cn(
+          "truncate font-display font-extrabold tracking-tight",
+          text,
+        )}
+      >
         <span className="brand-text">{branding.site_name.toUpperCase()}</span>
       </span>
     </span>
