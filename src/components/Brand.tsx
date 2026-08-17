@@ -41,12 +41,12 @@ export function BrandLockup({
 
   const mark =
     size === "xl"
-      ? "h-20 max-w-[320px] size-auto min-h-20 min-w-20 rounded-3xl text-4xl"
+      ? "h-16 max-w-[260px] size-auto min-h-16 min-w-16 rounded-2xl text-3xl"
       : size === "lg"
-        ? "h-14 max-w-[240px] size-auto min-h-14 min-w-14 rounded-2xl text-2xl"
+        ? "h-10 max-w-[160px] size-auto min-h-10 min-w-10 rounded-xl text-xl"
         : "";
   const text =
-    size === "xl" ? "text-4xl" : size === "lg" ? "text-2xl" : "text-lg";
+    size === "xl" ? "text-3xl" : size === "lg" ? "text-xl" : "text-base";
 
   return (
     <span className={cn("flex items-center gap-3", className)}>
