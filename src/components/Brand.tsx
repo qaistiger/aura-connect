@@ -10,7 +10,7 @@ export function BrandMark({ className }: { className?: string }) {
       <img
         src={logo}
         alt={`${branding.site_name} logo`}
-        className={cn("h-9 w-auto max-w-[160px] shrink-0 object-contain", className)}
+        className={cn("h-11 w-auto max-w-[180px] shrink-0 object-contain", className)}
       />
     );
   }
@@ -51,11 +51,9 @@ export function BrandLockup({
   return (
     <span className={cn("flex items-center gap-3", className)}>
       <BrandMark className={mark} />
-      {logo ? null : (
-        <span className={cn("font-display font-extrabold tracking-tight", text)}>
-          <span className="brand-text">{branding.site_name.toUpperCase()}</span>
-        </span>
-      )}
+      <span className={cn("font-display font-extrabold tracking-tight", text)}>
+        <span className="brand-text">{branding.site_name.toUpperCase()}</span>
+      </span>
     </span>
   );
 }

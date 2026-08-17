@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Bell, Clapperboard, Compass, Home, LogOut, MessageSquare, Plus, Settings, Shield, User } from "lucide-react";
+import { Bell, Clapperboard, Compass, Hop as Home, LogOut, MessageSquare, Plus, Settings, Shield, User } from "lucide-react";
 
 import { useAuth } from "@/lib/auth";
 import { useBranding } from "@/lib/branding";
@@ -80,10 +80,10 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4">
           <Link to="/" className="flex items-center">
             <span className="hidden sm:block">
-              <BrandLockup />
+              <BrandLockup size="lg" />
             </span>
             <span className="sm:hidden">
-              <BrandMark />
+              <BrandMark className="size-10" />
             </span>
           </Link>
 
